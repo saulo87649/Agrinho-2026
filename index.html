@@ -1,1 +1,344 @@
+// Variáveis para os elementos da animação
+let anguloTurbina = 0;
+let droneX = 0;
+let droneY = 150;
+let direcaoDrone = 1;
+let alturaArvores = 10;
 
+function setup() {
+  createCanvas(800, 500);
+}
+
+function draw() {
+  // Céu mudando suavemente de cor para simular o amanhecer (energia limpa)
+  background(135, 206, 235);
+  
+  // Sol (Energia Solar)
+  noStroke();
+  fill(255, 204, 0);
+  circle(700, 80, 80);
+  
+  // --- PLANTAÇÃO (Agro Forte) ---
+  // Solo / Pasto
+  fill(34, 139, 34); // Verde escuro
+  rect(0, 350, 800, 150);
+  
+  // Linhas de plantação em perspectiva
+  stroke(107, 142, 35);
+  strokeWeight(3);
+  for (let i = 0; i <= width; i += 80) {
+    line(i, 350, i * 1.5 - 200, height);
+  }
+  
+  // --- ENERGIA EÓLICA (Sustentabilidade) ---
+  desenharTurbinaEolica(150, 350, 120);
+  desenharTurbinaEolica(300, 350, 100);
+  anguloTurbina += 0.02; // Velocidade do giro das pás
+
+  // --- NATUREZA / REFLORESTAMENTO ---
+  // As árvores crescem até certo ponto para mostrar o futuro sustentável
+  if (alturaArvores < 60) {
+    alturaArvores += 0.05;
+  }
+  desenharArvore(600, 360, alturaArvores);
+  desenharArvore(680, 370, alturaArvores * 0.9);
+  desenharArvore(740, 355, alturaArvores * 1.1);
+
+  // --- TECNOLOGIA (Drone de Monitoramento) ---
+  moverEDesenharDrone();
+  
+  // --- TEXTO CONCEITUAL ---
+   fill(255);
+   noStroke();
+   rect(20, 20, 320, 65, 10);
+   
+   fill(0, 100, 0);
+   textSize(20);
+   textFont('Helvetica');
+   textStyle(BOLD);
+   text("AGRO FORTE", 35, 45);
+   
+   fill(34, 139, 34);
+   textSize(16);
+   textStyle(NORMAL);
+   text("Futuro Sustentável & Tecnológico", 35, 70);
+}
+
+// Função para desenhar as turbinas eólicas
+function desenharTurbinaEolica(x, y, altura) {
+  stroke(255);
+  strokeWeight(4);
+  // Torre
+  line(x, y, x, y - altura);
+  
+  // Pás giratórias
+  push();
+  translate(x, y - altura);
+  rotate(anguloTurbina);
+  strokeWeight(3);
+  for (let i = 0; i < 3; i++) {
+    rotate(TWO_PI / 3);
+    line(0, 0, 0, -40);
+  }
+  pop();
+  
+  // Miolo da turbina
+  fill(220);
+  noStroke();
+  circle(x, y - altura, 8);
+}
+
+// Função para desenhar as árvores
+function desenharArvore(x, y, alt) {
+  // Tronco
+  fill(139, 69, 19);
+  noStroke();
+  rect(x - 5, y - alt, 10, alt);
+  
+  // Copa da árvore
+  fill(46, 139, 87);
+  circle(x, y - alt, alt * 1.2);
+}
+
+// Função para controlar e desenhar o drone tecnológico
+function moverEDesenharDrone() {
+  // Movimento de vai e vem do drone
+  droneX += 2 * direcaoDrone;
+  if (droneX > width - 50 || droneX < 50) {
+    direcaoDrone *= -1;
+  }
+  
+  // Efeito flutuante no eixo Y
+  let flutuar = sin(frameCount * 0.05) * 5;
+  let atualY = droneY + flutuar;
+  
+  // Laser de monitoramento/leitura da plantação (Tecnologia no Agro)
+  stroke(0, 255, 255, 50); // Azul transparente
+  strokeWeight(2);
+  fill(0, 255, 255, 20);
+  triangle(droneX, atualY, droneX - 40, 350, droneX + 40, 350);
+  
+  // Corpo do Drone
+  noStroke();
+  fill(50);
+  rect(droneX - 25, atualY - 5, 50, 10, 5); // Corpo principal
+  fill(100);
+  rect(droneX - 5, atualY - 12, 10, 8); // Câmera/Sensor
+  
+  // Hélices
+  stroke(0);
+  strokeWeight(2);
+  line(droneX - 25, atualY - 5, droneX - 35, atualY - 5);
+  line(droneX + 25, uppercase, droneX + 35, atualY - 5);
+}
+// Altere a variável lá no topo do código para começar no meio da tela:
+// let droneX = 400; 
+
+function moverEDesenharDrone() {
+  // CONTROLE MANUAL: Verifica se as setas estão sendo pressionadas
+  if (keyIsDown(LEFT_ARROW)) {
+    droneX -= 5; // Move para a esquerda
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    droneX += 5; // Move para a direita
+  }
+  
+  // Limita o drone para não sair das bordas da tela
+  droneX = constrain(droneX, 50, width - 50);
+  
+  // Efeito flutuante no eixo Y (efeito de voo)
+  let flutuar = sin(frameCount * 0.05) * 5;
+  let atualY = droneY + flutuar;
+  
+  // Laser de monitoramento/leitura da plantação
+  stroke(0, 255, 255, 50); 
+  strokeWeight(2);
+  fill(0, 255, 255, 20);
+  triangle(droneX, atualY, droneX - 40, 350, droneX + 40, 350);
+  
+  // Corpo do Drone
+  noStroke();
+  fill(50);
+  rect(droneX - 25, atualY - 5, 50, 10, 5); 
+  fill(100);
+  rect(droneX - 5, atualY - 12, 10, 8); 
+  
+  // Hélices
+  stroke(0);
+  strokeWeight(2);
+  line(droneX - 25, atualY - 5, droneX - 35, atualY - 5);
+  line(droneX + 25, atualY - 5, droneX + 35, atualY - 5);
+}
+// Variáveis para os elementos da animação
+
+
+// Listas para controlar as sementes e os novos brotos
+let sementes = [];
+let brotos = [];
+
+function setup() {
+  createCanvas(800, 500);
+}
+
+function draw() {
+  // Céu
+  background(135, 206, 235);
+  
+  // Sol (Energia Solar)
+  noStroke();
+  fill(255, 204, 0);
+  circle(700, 80, 80);
+  
+  // --- PLANTAÇÃO (Agro Forte) ---
+  // Solo / Pasto
+  fill(34, 139, 34); // Verde escuro
+  rect(0, 350, 800, 150);
+  
+  // Linhas de plantação base
+  stroke(107, 142, 35);
+  strokeWeight(3);
+  for (let i = 0; i <= width; i += 80) {
+    line(i, 350, i * 1.5 - 200, height);
+  }
+  
+  // --- GERENCIAR SEMENTES E BROTOS ---
+  atualizarSementesEBrotos();
+  
+  // --- ENERGIA EÓLICA ---
+  desenharTurbinaEolica(150, 350, 120);
+  desenharTurbinaEolica(300, 350, 100);
+  anguloTurbina += 0.02;
+
+  // --- NATUREZA / REFLORESTAMENTO ---
+  if (alturaArvores < 60) {
+    alturaArvores += 0.05;
+  }
+  desenharArvore(600, 360, alturaArvores);
+  desenharArvore(680, 370, alturaArvores * 0.9);
+  desenharArvore(740, 355, alturaArvores * 1.1);
+
+  // --- TECNOLOGIA (Drone Semeador) ---
+  moverEDesenharDrone();
+  
+  // --- INTERFACE / INSTRUÇÕES ---
+  desenharInterface();
+}
+
+// Detecta quando a Barra de Espaço é pressionada para soltar a semente
+function keyPressed() {
+  if (key === ' ') {
+    // Adiciona uma nova semente na posição atual do drone
+    let flutuar = sin(frameCount * 0.05) * 5;
+    sementes.push({ x: droneX, y: droneY + flutuar + 10 });
+  }
+}
+
+function atualizarSementesEBrotos() {
+  // Desenhar e mover as sementes caíndo
+  fill(101, 67, 33); // Cor de semente (marrom)
+  noStroke();
+  
+  for (let i = sementes.length - 1; i >= 0; i--) {
+    circle(sementes[i].x, sementes[i].y, 6);
+    sementes[i].y += 4; // Velocidade da queda
+    
+    // Se a semente tocar o chão (Y = 350)
+    if (sementes[i].y >= 350) {
+      // Cria um broto naquela posição X
+      brotos.push({ x: sementes[i].x, y: 350, tamanho: 2 });
+      // Remove a semente da lista
+      sementes.splice(i, 1);
+    }
+  }
+  
+  // Desenhar e fazer os brotos crescerem
+  strokeWeight(2);
+  for (let b of brotos) {
+    stroke(124, 252, 0); // Verde folha brilhante
+    // Desenha duas folhinhas saindo do chão
+    line(b.x, b.y, b.x - b.tamanho, b.y - b.tamanho);
+    line(b.x, b.y, b.x + b.tamanho, b.y - b.tamanho);
+    
+    // O broto cresce até um limite útil
+    if (b.tamanho < 12) {
+      b.tamanho += 0.1;
+    }
+  }
+}
+
+function moverEDesenharDrone() {
+  // Controle manual por setas
+  if (keyIsDown(LEFT_ARROW)) droneX -= 5;
+  if (keyIsDown(RIGHT_ARROW)) droneX += 5;
+  droneX = constrain(droneX, 50, width - 50);
+  
+  let flutuar = sin(frameCount * 0.05) * 5;
+  let atualY = droneY + flutuar;
+  
+  // Laser azul de mira/escaneamento
+  stroke(0, 255, 255, 30); 
+  strokeWeight(1);
+  fill(0, 255, 255, 10);
+  triangle(droneX, atualY, droneX - 20, 350, droneX + 20, 350);
+  
+  // Corpo do Drone
+  noStroke();
+  fill(50);
+  rect(droneX - 25, atualY - 5, 50, 10, 5); 
+  fill(100);
+  rect(droneX - 5, atualY - 12, 10, 8); 
+  
+  // Hélices
+  stroke(0);
+  strokeWeight(2);
+  line(droneX - 25, atualY - 5, droneX - 35, atualY - 5);
+  line(droneX + 25, atualY - 5, droneX + 35, atualY - 5);
+}
+
+function desenharTurbinaEolica(x, y, altura) {
+  stroke(255);
+  strokeWeight(4);
+  line(x, y, x, y - altura);
+  
+  push();
+  translate(x, y - altura);
+  rotate(anguloTurbina);
+  strokeWeight(3);
+  for (let i = 0; i < 3; i++) {
+    rotate(TWO_PI / 3);
+    line(0, 0, 0, -40);
+  }
+  pop();
+  
+  fill(220);
+  noStroke();
+  circle(x, y - altura, 8);
+}
+
+function desenharArvore(x, y, alt) {
+  fill(139, 69, 19);
+  noStroke();
+  rect(x - 5, y - alt, 10, alt);
+  fill(46, 139, 87);
+  circle(x, y - alt, alt * 1.2);
+}
+
+function desenharInterface() {
+  // Fundo do painel
+  fill(255, 255, 255, 230);
+  noStroke();
+  rect(20, 20, 340, 90, 10);
+   
+  // Textos
+  fill(0, 100, 0);
+  textSize(18);
+  textFont('Helvetica');
+  textStyle(BOLD);
+  text("AGRO FORTE, FUTURO SUSTENTÁVEL", 35, 45);
+   
+  fill(50);
+  textSize(13);
+  textStyle(NORMAL);
+  text("◄ / ► : Mover o Drone Semeador", 35, 70);
+  text("ESPAÇO : Soltar sementes para plantar", 35, 90);
+}
